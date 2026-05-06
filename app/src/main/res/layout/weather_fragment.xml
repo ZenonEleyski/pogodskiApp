@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageButton
+        android:id="@+id/reload_btn"
+        android:background="@android:color/transparent"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/outline_directory_sync_24"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/text_location"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="75dp"
+        android:text=""
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary"
+
+        app:layout_constraintBottom_toTopOf="@id/big_temp_on_main_fragment"
+        app:layout_constraintStart_toStartOf="@id/big_temp_on_main_fragment"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+        android:id="@+id/big_temp_on_main_fragment"
+        android:layout_marginTop="100dp"
+        android:layout_marginStart="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="100sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <ImageView
+        android:id="@+id/weather_now"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+
+        app:layout_constraintStart_toEndOf="@id/big_temp_on_main_fragment"
+        app:layout_constraintTop_toTopOf="@id/big_temp_on_main_fragment"/>
+
+    <TextView
+        android:id="@+id/weather_code_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary"
+        android:rotation="90"
+        android:layout_marginTop="80dp"
+
+        app:layout_constraintEnd_toEndOf="@id/reload_btn"
+        app:layout_constraintTop_toBottomOf="@id/reload_btn"
+        app:layout_constraintStart_toStartOf="@id/reload_btn"/>
+
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleview_weather"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/bg_daily_weather"
+        android:padding="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="50dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/big_temp_on_main_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="10dp"
+
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/big_temp_on_main_fragment"
+        app:layout_constraintEnd_toEndOf="parent">
+
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/cloud"/>
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/cloud"/>
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/cloud"/>
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/cloud"/>
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/timeweather"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/bg_daily_weather"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recycleview_weather"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+
+
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="160dp"
+        android:layout_marginStart="10dp"
+
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/big_temp_on_main_fragment"
+        app:layout_constraintEnd_toEndOf="parent">
+
+
+
+
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="30dp"
+        android:src="@drawable/cloud"/>
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="30dp"
+        android:src="@drawable/cloud"/>
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="30dp"
+        android:src="@drawable/cloud"/>
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="30dp"
+        android:src="@drawable/cloud"/>
+    </LinearLayout>
+
+
+
+
+
+
+
+
+
+    <TextView
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading"
+        android:textColor="?attr/colorPrimary"
+        android:layout_marginTop="150dp"
+
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

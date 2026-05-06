@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/weatherfragment"
+        android:icon="@drawable/clouds_sun"
+        android:title="@string/weather_in_menu"
+        />
+    <item
+        android:id="@+id/searchfragment"
+        android:icon="@drawable/search_menu"
+        android:title="@string/search_in_menu"
+        />
+    <item
+        android:id="@+id/infofragment"
+        android:icon="@drawable/ic_info_menu"
+        android:title="@string/info_in_menu"
+        />
+</menu>

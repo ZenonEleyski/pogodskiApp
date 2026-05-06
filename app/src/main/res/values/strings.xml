@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">pogodski</string>
+    <string name="weather_in_menu">Погода</string>
+    <string name="search_in_menu">Поиск</string>
+    <string name="info_in_menu">Инфо</string>
+    <string name="switch_theme">Переключить тему:</string>
+    <string name="info">Информация:</string>
+    <string name="first_info">Приложение которое показывает погоду\n Кто бы мог подумать...</string>
+    <string name="temperature_celsius">°C</string>
+
+    <string name="sun">СУННИ</string>
+    <string name="rain">РАИН</string>
+    <string name="snow">СНОУ</string>
+    <string name="cloudy">КЛОДИ</string>
+    <string name="cloudy_sun">ДЕФОЛТС</string>
+    <string name="hz">ХЕЗЕ ЧО</string>
+    <string name="loading">ЗАГРУЗКA ДАННЫХ..</string>
+    <string name="todo">TODO</string>
+</resources>
