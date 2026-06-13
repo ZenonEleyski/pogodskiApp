@@ -22,18 +22,7 @@ public class SearchFragment extends Fragment {
         msc = view.findViewById(R.id.moscowbtn);
         stv = view.findViewById(R.id.stavbtn);
 
-        MyLocation location = MyLocation.getInstance();
-        BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottom_nav_menu);
 
-        msc.setOnClickListener(v -> {
-            MyLocation.getInstance().setManualLocation(55.7, 37.6);
-            bottomNavigationView.setSelectedItemId(R.id.weatherfragment);
-        });
-
-        stv.setOnClickListener(v -> {
-            MyLocation.getInstance().setManualLocation(45, 42);
-            bottomNavigationView.setSelectedItemId(R.id.weatherfragment);
-        });
 
 
 

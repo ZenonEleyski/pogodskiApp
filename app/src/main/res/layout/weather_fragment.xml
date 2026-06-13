@@ -15,20 +15,24 @@
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/text_location"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_marginTop="75dp"
-        android:text=""
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:textColor="?attr/colorPrimary"
-
+        android:paddingStart="30dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@id/big_temp_on_main_fragment"
         app:layout_constraintStart_toStartOf="@id/big_temp_on_main_fragment"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/text_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorPrimary" />
+    </ScrollView>
+
     <TextView
         android:id="@+id/big_temp_on_main_fragment"
         android:layout_marginTop="100dp"
@@ -36,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
-        android:textSize="100sp"
+        android:textSize="85sp"
         android:textStyle="bold"
         android:textColor="?attr/colorPrimary"
 
@@ -49,6 +53,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="20dp"
+        android:layout_marginStart="5dp"
 
         app:layout_constraintStart_toEndOf="@id/big_temp_on_main_fragment"
         app:layout_constraintTop_toTopOf="@id/big_temp_on_main_fragment"/>
@@ -71,127 +76,35 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleview_weather"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:id="@+id/recycleview_weather_hour"
+        android:layout_width="0dp"
+        android:layout_height="110dp"
         android:background="@drawable/bg_daily_weather"
-        android:padding="20dp"
+        android:padding="2dp"
+        android:paddingEnd="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="50dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/big_temp_on_main_fragment"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
-    <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="100dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="50dp"
-        android:layout_marginStart="10dp"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/big_temp_on_main_fragment"
-        app:layout_constraintEnd_toEndOf="parent">
-
-
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="30dp"
-            android:src="@drawable/cloud"/>
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="30dp"
-            android:src="@drawable/cloud"/>
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="30dp"
-            android:src="@drawable/cloud"/>
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginStart="30dp"
-            android:src="@drawable/cloud"/>
-
-
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/timeweather"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleview_weather_week"
+        android:layout_width="0dp"
+        android:layout_height="110dp"
         android:background="@drawable/bg_daily_weather"
+        android:padding="2dp"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/recycleview_weather"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-
-
-    <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="100dp"
+        android:layout_marginTop="50dp"
         android:orientation="horizontal"
-        android:layout_marginTop="160dp"
-        android:layout_marginStart="10dp"
-
-
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/big_temp_on_main_fragment"
-        app:layout_constraintEnd_toEndOf="parent">
-
-
-
-
-
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="30dp"
-        android:src="@drawable/cloud"/>
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="30dp"
-        android:src="@drawable/cloud"/>
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="30dp"
-        android:src="@drawable/cloud"/>
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="30dp"
-        android:src="@drawable/cloud"/>
-    </LinearLayout>
-
-
-
-
-
-
-
-
+        app:layout_constraintTop_toBottomOf="@id/recycleview_weather_hour"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/loading"
