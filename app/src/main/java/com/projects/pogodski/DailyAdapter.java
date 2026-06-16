@@ -1,5 +1,6 @@
 package com.projects.pogodski;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import java.util.LinkedList;
 
 public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder>{
     private final LinkedList<Day> days;
+    private static final String LOG_TAG = "weatherfragmentlog";
 
     public DailyAdapter(LinkedList<Day> days) {
         this.days = days;
@@ -26,7 +28,7 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.daily_day,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_weather_day,parent,false);
         return new ViewHolder(view);
     }
     @Override
@@ -37,6 +39,53 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder>{
         double temp = Double.parseDouble(day.getTemperature());
         int intTemp = (int) temp;
         holder.temperature.setText(String.valueOf(intTemp)+"°");
+
+        String date = day.getDate();
+        String[] parts = date.split("-");
+        String dayForTv = parts[2];
+        String month = parts[1];
+        switch (month) {
+            case "01":
+                holder.date.setText(dayForTv + " Янв");
+                break;
+            case "02":
+                holder.date.setText(dayForTv + " Фев");
+                break;
+            case "03":
+                holder.date.setText(dayForTv + " Мар");
+                break;
+            case "04":
+                holder.date.setText(dayForTv + " Апр");
+                break;
+            case "05":
+                holder.date.setText(dayForTv + " Май");
+                break;
+            case "06":
+                holder.date.setText(dayForTv + " Июн");
+                break;
+            case "07":
+                holder.date.setText(dayForTv + " Июл");
+                break;
+            case "08":
+                holder.date.setText(dayForTv + " Авг");
+                break;
+            case "09":
+                holder.date.setText(dayForTv + " Сен");
+                break;
+            case "10":
+                holder.date.setText(dayForTv + " Окт");
+                break;
+            case "11":
+                holder.date.setText(dayForTv + " Ноя.");
+                break;
+            case "12":
+                holder.date.setText(dayForTv + " Дек");
+                break;
+            default:
+                holder.date.setText(dayForTv + " ???");
+                break;
+        }
+
     }
     @Override
     public int getItemCount() {
@@ -45,11 +94,13 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder>{
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView temperature;
         private final ImageView icon;
+        private final TextView date;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             temperature = itemView.findViewById(R.id.temperature);
             icon = itemView.findViewById(R.id.icon);
+            date = itemView.findViewById(R.id.date);
         }
     }
     private void setIcons(int weatherCode, ImageView weatherCodeIcon){

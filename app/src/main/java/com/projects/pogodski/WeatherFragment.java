@@ -40,6 +40,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 public class WeatherFragment extends Fragment {
     private TextView mainTemperature;
@@ -54,10 +56,12 @@ public class WeatherFragment extends Fragment {
     private Day day;
     private ArrayList<String> dailyTemperatures;
     private ArrayList<String> dailyCodes;
+    private ArrayList<String> dailyDates;
     private RecyclerView recyclerViewDaily;
     private RecyclerView recyclerViewPerHour;
     private DailyAdapter dailyAdapter;
     private PerHourAdapter perHourAdapter;
+    Semaphore semaphore;
 
 
 
@@ -74,6 +78,7 @@ public class WeatherFragment extends Fragment {
         day = new Day();
         dailyTemperatures = new ArrayList<>();
         dailyCodes = new ArrayList<>();
+        dailyDates = new ArrayList<>();
 
         prefManager = new PrefManager(requireActivity());
         reload = view.findViewById(R.id.reload_btn);
@@ -89,6 +94,7 @@ public class WeatherFragment extends Fragment {
         LinkedList<Day> dayDaily = new LinkedList<>();
         dailyAdapter = new DailyAdapter(dayDaily);
         recyclerViewDaily.setAdapter(dailyAdapter);
+
         recyclerViewPerHour = view.findViewById(R.id.recycleview_weather_hour);
         recyclerViewPerHour.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false));
         LinkedList<Day> dayPerHour = new LinkedList<>();
@@ -98,13 +104,13 @@ public class WeatherFragment extends Fragment {
         if (prefManager.getGeoMethod()==null){
             prefManager.setGeoMethod("geolocation");
         }
-
+        semaphore = new Semaphore(0);
 
         locationPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (isGranted) {
-                        getGPS();
+                        updateInfo();
                     }else {
                         locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
                     }
@@ -121,28 +127,31 @@ public class WeatherFragment extends Fragment {
 
     }
 
-
-
-
-    private void checkPermission(){
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
+    private void updateInfo(){
+        dailyTemperatures.clear();
+        dailyCodes.clear();
+        Log.i(LOG_TAG, "обновление...");
+        semaphore.drainPermits();
+        if (prefManager.getGeoMethod().equals("geolocation")){
             getGPS();
         }else{
-            locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            semaphore.release();
         }
-    }
-    private void updateInfo(){
-        Log.i(LOG_TAG, "");
-        if (prefManager.getGeoMethod().equals("geolocation")){
-            checkPermission();
-        }
-        if (day.getLongitude()==null || day.getLatitude()==null || day.getLongitude().equals("0") || day.getLatitude().equals("0")){setDefaultLocation();}
-        new Thread(()->{
+
+        Thread th = new Thread(()->{
+            try {
+                semaphore.acquire();
+            } catch (InterruptedException e) {
+                loadLastLocation();
+            }
+            if (day.getLongitude()==null || day.getLatitude()==null || day.getLongitude().equals("0") || day.getLatitude().equals("0")){setDefaultLocation();}
+
             StringBuilder responseBody = new StringBuilder();
             try {
                 URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude="+day.getLatitude()+"&longitude="+day.getLongitude()+"&daily=weather_code,temperature_2m_max&hourly=temperature_2m,weather_code&current=temperature_2m,weather_code&timezone=Europe%2FMoscow");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
+                Log.i(LOG_TAG, "итоговая ссылка=" + url);
 
                 int responseCode = connection.getResponseCode();
                 if (responseCode == 200) {
@@ -166,6 +175,9 @@ public class WeatherFragment extends Fragment {
                 for (int i = 0; i < dailyJson.getJSONArray("temperature_2m_max").length(); i++) {
                     dailyTemperatures.add(dailyJson.getJSONArray("temperature_2m_max").getString(i));
                 }
+                for (int i = 0; i < dailyJson.getJSONArray("time").length(); i++) {
+                    dailyDates.add(dailyJson.getJSONArray("time").getString(i));
+                }
 
                 JSONObject currentJson = json.getJSONObject("current");
                 day.setTemperature(String.valueOf(currentJson.getInt("temperature_2m")));
@@ -182,7 +194,7 @@ public class WeatherFragment extends Fragment {
                 }
                 day.setWeatherCodePerHour(codes);
                 day.setTemperaturePerHour(temps);
-                Log.i(LOG_TAG,"загружено="+day.getWeatherCodePerHour());
+                Log.i(LOG_TAG,"загружено (в час)="+day.getWeatherCodePerHour());
             } catch (JSONException e) {}
 
             StringBuilder responseBodyCity = new StringBuilder();
@@ -214,7 +226,7 @@ public class WeatherFragment extends Fragment {
                 Log.e(LOG_TAG, "err="+e.getMessage());}//error
 
             saveLastLocation();
-            Log.i(LOG_TAG, "загружены данные");
+            Log.i(LOG_TAG, "текущие данные геолокации");
             Log.i(LOG_TAG, "д="+day.getLongitude());
             Log.i(LOG_TAG, "ш="+day.getLatitude());
             Log.i(LOG_TAG, "код="+day.getWeatherCode());
@@ -223,12 +235,12 @@ public class WeatherFragment extends Fragment {
 
             LinkedList<Day> dayDaily = new LinkedList<>();
             for (int i=0; i<7;i++){
-                Day newDay = new Day(dailyTemperatures.get(i), dailyCodes.get(i));
+                Day newDay = new Day(dailyTemperatures.get(i), dailyCodes.get(i), dailyDates.get(i));
                 dayDaily.add(newDay);
             }
             LinkedList<Day> dayPerHour = new LinkedList<>();
             for (int i=0; i<24;i++){
-                Day newDay = new Day(day.getTemperaturePerHour().get(i), day.getWeatherCodePerHour().get(i));
+                Day newDay = new Day(day.getTemperaturePerHour().get(i), day.getWeatherCodePerHour().get(i), null);
                 dayPerHour.add(newDay);
             }
 
@@ -239,12 +251,13 @@ public class WeatherFragment extends Fragment {
                 dailyAdapter.update(dayDaily);
                 perHourAdapter.update(dayPerHour);
             });
-        }).start();
+        });
+        th.start();
+
 
     }
     public void updateUI(){
         int weatherCode = Integer.parseInt(day.getWeatherCode());
-                Log.i(LOG_TAG, "Код погоды - "+weatherCode);
         setIcons(weatherCode, mainWeatherCodeIcon, mainWeatherCodeText);
 
         mainTemperature.setText(String.valueOf(day.getTemperature())+"°C");
@@ -253,26 +266,31 @@ public class WeatherFragment extends Fragment {
     private void setDefaultLocation(){
         Log.i(LOG_TAG, "поставлена дефолт локация");
         day.setCity("дефолт");
-        day.setLongitude("100");
-        day.setLatitude("10");
+        day.setLongitude("-118");
+        day.setLatitude("34");
     }
     private void getGPS(){
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             setDefaultLocation();
-            return;
-        }
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
-        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-            if (location != null) {
-                day.setLatitude(String.valueOf(location.getLatitude()));
-                day.setLongitude(String.valueOf(location.getLongitude()));
-                Log.i(LOG_TAG, "получены координаты из GPS д="+location.getLongitude()+"ш="+location.getLatitude());
-            }else{
+            Log.i(LOG_TAG, "разрешение не дано, принялись дефолт координаты");
+            semaphore.release();
+        }else{
+            FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                if (location != null) {
+                    day.setLatitude(String.valueOf(location.getLatitude()));
+                    day.setLongitude(String.valueOf(location.getLongitude()));
+                    Log.i(LOG_TAG, "получены координаты из GPS д="+location.getLongitude()+"ш="+location.getLatitude());
+                }else{
+                    Log.e(LOG_TAG, "координаты не получены, загруженные последние координаты из памяти");
+                    loadLastLocation();
+                }
+                semaphore.release();
+            }).addOnFailureListener(e -> {
                 loadLastLocation();
-            }
-        }).addOnFailureListener(e -> {
-                    setDefaultLocation();
-        });
+                semaphore.release();
+            });
+        }
     }
     private void saveLastLocation(){
         prefManager.setTemperature(day.getTemperature());
@@ -280,14 +298,20 @@ public class WeatherFragment extends Fragment {
         prefManager.setLongitude(day.getLongitude());
         prefManager.setCity(day.getCity());
         prefManager.setCode(day.getWeatherCode());
+
+        Log.i(LOG_TAG, "сохранены данные геолокации ш="+prefManager.getLatitude()+" д="+prefManager.getLongitude());
     }
     private void loadLastLocation(){
         Log.i(LOG_TAG, "загружены последние координаты");
-        day.setTemperature(prefManager.getTemperature());
-        day.setLatitude(prefManager.getLatitude());
-        day.setLongitude(prefManager.getLongitude());
-        day.setCity(prefManager.getCity());
-        day.setWeatherCode(prefManager.getCode());
+        if (prefManager.getLatitude()!=null) {
+            day.setTemperature(prefManager.getTemperature());
+            day.setLatitude(prefManager.getLatitude());
+            day.setLongitude(prefManager.getLongitude());
+            day.setCity(prefManager.getCity());
+            day.setWeatherCode(prefManager.getCode());
+        }else{
+            setDefaultLocation();
+        }
     }
 
     private void setIcons(int weatherCode, ImageView weatherCodeIcon, TextView weatherCodeText){
@@ -322,6 +346,5 @@ public class WeatherFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateInfo();
-
     }
 }

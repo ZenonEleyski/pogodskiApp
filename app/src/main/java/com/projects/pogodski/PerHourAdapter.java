@@ -37,6 +37,12 @@ public class PerHourAdapter extends RecyclerView.Adapter<PerHourAdapter.ViewHold
         double temp = Double.parseDouble(day.getTemperature());
         int intTemp = (int) temp;
         holder.temperature.setText(String.valueOf(intTemp)+"°");
+        if(position<10){
+            holder.time.setText("0"+position+":00");
+        }else{
+            holder.time.setText(position+":00");
+        }
+
     }
     @Override
     public int getItemCount() {
@@ -45,11 +51,13 @@ public class PerHourAdapter extends RecyclerView.Adapter<PerHourAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView temperature;
         private final ImageView icon;
+        private final TextView time;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             temperature = itemView.findViewById(R.id.temperature);
             icon = itemView.findViewById(R.id.icon);
+            time = itemView.findViewById(R.id.time);
         }
     }
     private void setIcons(int weatherCode, ImageView weatherCodeIcon){

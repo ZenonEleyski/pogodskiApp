@@ -10,13 +10,15 @@ public class Day {
     ArrayList<String> temperaturePerHour;
     ArrayList<String> weatherCodePerHour;
     String city;
+    String date;
 
     public Day() {
     }
 
-    public Day(String temperature, String weatherCode) {
+    public Day(String temperature, String weatherCode, String date) {
         this.temperature = temperature;
         this.weatherCode = weatherCode;
+        this.date = date;
     }
 
     public String getCity() {
@@ -73,5 +75,13 @@ public class Day {
 
     public void setWeatherCodePerHour(ArrayList<String> weatherCodePerHour) {
         this.weatherCodePerHour = weatherCodePerHour;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
