@@ -110,25 +110,28 @@ public class WeatherFragment extends Fragment {
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (isGranted) {
+                        prefManager.setGeoMethod("geolocation");
                         updateInfo();
                     }else {
-                        setDefaultLocation();
+                        prefManager.setGeoMethod("default");
                         updateInfo();
                     }
                 }
         );
+
         setPermission();
 
 
 
 
         reload.setOnClickListener(v->{
+            v.animate().rotationBy(180).setDuration(300).start();
             if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED){
                 locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            }else{
+                updateInfo();
             }
-            v.animate().rotationBy(180).setDuration(300).start();
-            updateInfo();
         });
 
     }
@@ -137,6 +140,8 @@ public class WeatherFragment extends Fragment {
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED){
             locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        }else{
+            updateInfo();
         }
     }
 
@@ -148,21 +153,28 @@ public class WeatherFragment extends Fragment {
         semaphore.drainPermits();
         if (prefManager.getGeoMethod().equals("geolocation")){
             getGPS();
-        }else{
+        } else if (prefManager.getGeoMethod().equals("Moscow")){
+            day.setLatitude("55.7558");
+            day.setLongitude("37.6173");
+            semaphore.release();
+        } else if (prefManager.getGeoMethod().equals("Stavropol")){
+            day.setLatitude("45.0448");
+            day.setLongitude("41.9690");
+            semaphore.release();
+        }else if (prefManager.getGeoMethod().equals("default")){
+            setDefaultLocation();
             semaphore.release();
         }
 
         Thread th = new Thread(()->{
             try {
                 semaphore.acquire();
-            } catch (InterruptedException e) {
-                loadLastLocation();
-            }
+            } catch (InterruptedException e) {}
             if (day.getLongitude()==null || day.getLatitude()==null || day.getLongitude().equals("0") || day.getLatitude().equals("0")){setDefaultLocation();}
 
             StringBuilder responseBody = new StringBuilder();
             try {
-                URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude="+day.getLatitude()+"&longitude="+day.getLongitude()+"&daily=weather_code,temperature_2m_max&hourly=temperature_2m,weather_code&current=temperature_2m,weather_code&timezone=Europe%2FMoscow");
+                URL url = new URL("https://api.open-meteo.com/v1/forecast?latitude="+day.getLatitude()+"&longitude="+day.getLongitude()+"&daily=weather_code,temperature_2m_max&hourly=temperature_2m,weather_code&current=temperature_2m,weather_code&timezone=Europe%2FMoscow&forecast_days=7");
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 Log.i(LOG_TAG, "итоговая ссылка=" + url);
@@ -176,9 +188,9 @@ public class WeatherFragment extends Fragment {
                             responseBody.append(line);
                         }
                         reader.close();
-                    } catch (IOException err) {Log.e(LOG_TAG, "err="+err.getMessage());loadLastLocation();}//error
-                }else{Log.e(LOG_TAG, "err=");loadLastLocation();}//error
-            }catch (Exception err){Log.e(LOG_TAG, "err="+err.getMessage());loadLastLocation();}//error
+                    } catch (IOException err) {Log.e(LOG_TAG, "err="+err.getMessage());}//error
+                }else{Log.e(LOG_TAG, "err=");}//error
+            }catch (Exception err){Log.e(LOG_TAG, "err="+err.getMessage());}//error
 
             try {
                 JSONObject json = new JSONObject(String.valueOf(responseBody));
@@ -225,21 +237,29 @@ public class WeatherFragment extends Fragment {
                             responseBodyCity.append(line);
                         }
                         reader.close();
-                    } catch (IOException err) {Log.e(LOG_TAG, "err="+err.getMessage());loadLastLocation();}//error
+                    } catch (IOException err) {Log.e(LOG_TAG, "err="+err.getMessage());}//error
                 }else{
-                    Log.e(LOG_TAG, "err resCode="+responseCode);
-                    loadLastLocation();}//error
+                    Log.e(LOG_TAG, "err resCode="+responseCode);}//error
             }catch (Exception err){Log.e(LOG_TAG, "err="+err.getMessage());}
+
+            Log.i(LOG_TAG, "Ответ от Open-Meteo: " + responseBody.toString());
+            if (responseBody.length() < 10) {
+                Log.e(LOG_TAG, "ОТВЕТ ПУСТОЙ! Нет интернета или ошибка сервера.");
+                requireActivity().runOnUiThread(() -> {
+                    loading.setText("");
+                    mainTemperature.setText("--°C");
+                    mainLocation.setText("Офлайн");
+                });
+                return;
+            }
 
             try {
                 JSONObject json = new JSONObject(String.valueOf(responseBodyCity));
                 day.setCity(json.getString("city"));
                 Log.i(LOG_TAG, "город="+json.getString("city"));
             } catch (JSONException e) {
-                loadLastLocation();
                 Log.e(LOG_TAG, "err="+e.getMessage());}//error
 
-            saveLastLocation();
             Log.i(LOG_TAG, "текущие данные геолокации");
             Log.i(LOG_TAG, "д="+day.getLongitude());
             Log.i(LOG_TAG, "ш="+day.getLatitude());
@@ -297,36 +317,14 @@ public class WeatherFragment extends Fragment {
                     Log.i(LOG_TAG, "получены координаты из GPS д="+location.getLongitude()+"ш="+location.getLatitude());
                 }else{
                     Log.e(LOG_TAG, "координаты не получены, загруженные последние координаты из памяти");
-                    loadLastLocation();
                 }
                 semaphore.release();
             }).addOnFailureListener(e -> {
-                loadLastLocation();
                 semaphore.release();
             });
         }
     }
-    private void saveLastLocation(){
-        prefManager.setTemperature(day.getTemperature());
-        prefManager.setLatitude(day.getLatitude());
-        prefManager.setLongitude(day.getLongitude());
-        prefManager.setCity(day.getCity());
-        prefManager.setCode(day.getWeatherCode());
 
-        Log.i(LOG_TAG, "сохранены данные геолокации ш="+prefManager.getLatitude()+" д="+prefManager.getLongitude());
-    }
-    private void loadLastLocation(){
-        Log.i(LOG_TAG, "загружены последние координаты");
-        if (prefManager.getLatitude()!=null) {
-            day.setTemperature(prefManager.getTemperature());
-            day.setLatitude(prefManager.getLatitude());
-            day.setLongitude(prefManager.getLongitude());
-            day.setCity(prefManager.getCity());
-            day.setWeatherCode(prefManager.getCode());
-        }else{
-            setDefaultLocation();
-        }
-    }
 
     private void setIcons(int weatherCode, ImageView weatherCodeIcon, TextView weatherCodeText){
         if (weatherCode == 0 || weatherCode == 1) {
@@ -359,6 +357,6 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateInfo();
+
     }
 }
