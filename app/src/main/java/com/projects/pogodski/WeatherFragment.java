@@ -112,20 +112,34 @@ public class WeatherFragment extends Fragment {
                     if (isGranted) {
                         updateInfo();
                     }else {
-                        locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+                        setDefaultLocation();
+                        updateInfo();
                     }
                 }
         );
+        setPermission();
 
 
 
 
         reload.setOnClickListener(v->{
+            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED){
+                locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
             v.animate().rotationBy(180).setDuration(300).start();
             updateInfo();
         });
 
     }
+
+    private void setPermission () {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+    }
+
 
     private void updateInfo(){
         dailyTemperatures.clear();
