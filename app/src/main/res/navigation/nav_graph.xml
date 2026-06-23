@@ -11,5 +11,13 @@
         android:name="com.projects.pogodski.WeatherFragment"/>
     <fragment
         android:name="com.projects.pogodski.SearchFragment"
-        android:id="@+id/searchfragment"/>
+        android:id="@+id/searchfragment">
+        <action
+            android:id="@+id/action_citySelection_to_weather"
+            app:destination="@id/weatherfragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"/>
+    </fragment>
 </navigation>

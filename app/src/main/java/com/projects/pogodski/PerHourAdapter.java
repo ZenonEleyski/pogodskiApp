@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Calendar;
 import java.util.LinkedList;
 
 public class PerHourAdapter extends RecyclerView.Adapter<PerHourAdapter.ViewHolder>{
@@ -41,6 +42,11 @@ public class PerHourAdapter extends RecyclerView.Adapter<PerHourAdapter.ViewHold
             holder.time.setText("0"+position+":00");
         }else{
             holder.time.setText(position+":00");
+        }
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if (position==hour){
+            holder.time.setText("сейчас");
         }
 
     }

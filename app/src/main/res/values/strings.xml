@@ -4,9 +4,6 @@
     <string name="search_in_menu">Поиск</string>
     <string name="info_in_menu">Инфо</string>
     <string name="switch_theme">Переключить тему:</string>
-    <string name="info">Информация:</string>
-    <string name="first_info">Приложение которое показывает погоду\n Кто бы мог подумать...</string>
-    <string name="temperature_celsius">°C</string>
 
     <string name="sun">СУННИ</string>
     <string name="rain">РАИН</string>
@@ -15,5 +12,18 @@
     <string name="cloudy_sun">ДЕФОЛТС</string>
     <string name="hz">ХЕЗЕ ЧО</string>
     <string name="loading">ЗАГРУЗКA ДАННЫХ..</string>
-    <string name="todo">TODO</string>
+    <string name="pogodski_info">Pogodski — это удобное и простое погодное приложение для Android, которое всегда подскажет, какая погода ждёт вас сегодня, завтра и на ближайшие дни. С ним вы всегда будете знать, стоит ли брать зонт, одеваться теплее или планировать прогулку. Приложение автоматически определяет ваше местоположение, чтобы показать погоду прямо сейчас, или вы можете сами выбрать город из списка популярных городов, включая Москву, Санкт-Петербург, Казань, Дубай и многие другие. Pogodski показывает не только температуру, но и влажность, скорость ветра, а также даёт почасовой прогноз, чтобы вы могли спланировать свой день до мелочей. Интерфейс приложения интуитивно понятен, работает быстро и адаптируется под светлую или тёмную тему вашего устройства. Оно не перегружено лишними функциями — только самая нужная информация о погоде в любое время и в любом месте.</string>
+    <string name="Info">Информация:</string>
+    <string name="Russia">Россия</string>
+    <string name="Rostov">Ростов на Дону</string>
+    <string name="Kaliningrad">Калининград</string>
+    <string name="StPetersburg">Санкт-Петербург</string>
+    <string name="Moscow">Москва</string>
+    <string name="Stavropol">Ставрополь</string>
+    <string name="Kazan">Казань</string>
+    <string name="Dubai">Дубай</string>
+    <string name="OAE">ОАЭ (Объединенные Арабские Эмираты)</string>
+    <string name="Cities">Города</string>
+    <string name="get_location">Определить местоположение</string>
+    <string name="current_location">Текущее местосположение</string>
 </resources>

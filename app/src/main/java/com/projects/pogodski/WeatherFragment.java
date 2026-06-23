@@ -151,20 +151,42 @@ public class WeatherFragment extends Fragment {
         dailyCodes.clear();
         Log.i(LOG_TAG, "обновление...");
         semaphore.drainPermits();
-        if (prefManager.getGeoMethod().equals("geolocation")){
+
+        if (prefManager.getGeoMethod().equals("geolocation")) {
             getGPS();
-        } else if (prefManager.getGeoMethod().equals("Moscow")){
+        } else if (prefManager.getGeoMethod().equals("Moscow")) {
             day.setLatitude("55.7558");
             day.setLongitude("37.6173");
             semaphore.release();
-        } else if (prefManager.getGeoMethod().equals("Stavropol")){
+        } else if (prefManager.getGeoMethod().equals("Stavropol")) {
             day.setLatitude("45.0448");
             day.setLongitude("41.9690");
             semaphore.release();
-        }else if (prefManager.getGeoMethod().equals("default")){
+        } else if (prefManager.getGeoMethod().equals("Kazan")) {
+            day.setLatitude("55.8304");
+            day.setLongitude("49.0661");
+            semaphore.release();
+        } else if (prefManager.getGeoMethod().equals("StPetersburg")) {
+            day.setLatitude("59.9343");
+            day.setLongitude("30.3351");
+            semaphore.release();
+        } else if (prefManager.getGeoMethod().equals("Dubai")) {
+            day.setLatitude("25.2048");
+            day.setLongitude("55.2708");
+            semaphore.release();
+        } else if (prefManager.getGeoMethod().equals("Kaliningrad")) {
+            day.setLatitude("54.716");
+            day.setLongitude("20.509");
+            semaphore.release();
+        } else if (prefManager.getGeoMethod().equals("Rostov")) {
+            day.setLatitude("47.24");
+            day.setLongitude("39.716");
+            semaphore.release();
+        } else if (prefManager.getGeoMethod().equals("default")) {
             setDefaultLocation();
             semaphore.release();
         }
+        Log.i(LOG_TAG, "геометод="+prefManager.getGeoMethod());
 
         Thread th = new Thread(()->{
             try {

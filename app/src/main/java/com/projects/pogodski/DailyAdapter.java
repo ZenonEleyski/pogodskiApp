@@ -46,43 +46,56 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder>{
         String month = parts[1];
         switch (month) {
             case "01":
-                holder.date.setText(dayForTv + " Янв");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("ЯНВ");
                 break;
             case "02":
-                holder.date.setText(dayForTv + " Фев");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("ФЕВ");
                 break;
             case "03":
-                holder.date.setText(dayForTv + " Мар");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("МАР");
                 break;
             case "04":
-                holder.date.setText(dayForTv + " Апр");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("АПР");
                 break;
             case "05":
-                holder.date.setText(dayForTv + " Май");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("МАЙ");
                 break;
             case "06":
-                holder.date.setText(dayForTv + " Июн");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("ИЮН");
                 break;
             case "07":
-                holder.date.setText(dayForTv + " Июл");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("ИЮЛ");
                 break;
             case "08":
-                holder.date.setText(dayForTv + " Авг");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("АВГ");
                 break;
             case "09":
-                holder.date.setText(dayForTv + " Сен");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("СЕН");
                 break;
             case "10":
-                holder.date.setText(dayForTv + " Окт");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("ОКТ");
                 break;
             case "11":
-                holder.date.setText(dayForTv + " Ноя.");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("НОЯ");
                 break;
             case "12":
-                holder.date.setText(dayForTv + " Дек");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("ДЕК");
                 break;
             default:
-                holder.date.setText(dayForTv + " ???");
+                holder.dateN.setText(dayForTv);
+                holder.dateT.setText("???");
                 break;
         }
 
@@ -94,13 +107,15 @@ public class DailyAdapter extends RecyclerView.Adapter<DailyAdapter.ViewHolder>{
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView temperature;
         private final ImageView icon;
-        private final TextView date;
+        private final TextView dateN;
+        private final TextView dateT;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             temperature = itemView.findViewById(R.id.temperature);
             icon = itemView.findViewById(R.id.icon);
-            date = itemView.findViewById(R.id.date);
+            dateN = itemView.findViewById(R.id.date_num);
+            dateT = itemView.findViewById(R.id.date_text);
         }
     }
     private void setIcons(int weatherCode, ImageView weatherCodeIcon){
